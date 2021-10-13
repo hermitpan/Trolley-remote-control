@@ -1,0 +1,116 @@
+C51 COMPILER V9.59.0.0   MOTOR                                                             10/12/2021 23:49:29 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE MOTOR
+OBJECT MODULE PLACED IN motor.OBJ
+COMPILER INVOKED BY: D:\MDK5\C51\BIN\C51.EXE motor.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND TABS(2)
+
+line level    source
+
+   1          #include <REGX52.H>
+   2          
+   3          sbit IN1 = P1^0; //定义右边控制引脚
+   4          sbit IN2 = P1^1;
+   5          sbit IN3 = P1^2; //定义左边控制引脚
+   6          sbit IN4 = P1^3;
+   7          
+   8          void Motor_Left(bit ReverOrCoro, unsigned char DutyCycle); //左边电机控制函数
+   9          void Motor_Right(bit ReverOrCoro, unsigned char DutyCycle); //右边电机控制函数
+  10          
+  11          unsigned char cnt = 0;
+  12          
+  13          /*
+  14          参数定义：
+  15            ReverOrCoro 传递正反转，1为正转，0为反转
+  16            DutyCycle 占空比参数
+  17          */
+  18          void Motor_Left(bit ReverOrCoro, unsigned char DutyCycle) 
+  19          {
+  20   1        if(ReverOrCoro == 1)
+  21   1        {
+  22   2          IN1 = 1;
+  23   2          if(cnt <= DutyCycle)
+  24   2          {
+  25   3            IN2 = 0;
+  26   3          }
+  27   2          else
+  28   2          {
+  29   3            IN2 = 1;
+  30   3          }
+  31   2        }
+  32   1        else
+  33   1        {
+  34   2          IN2 = 1;
+  35   2          if(cnt <= DutyCycle)
+  36   2          {
+  37   3            IN1 = 0;
+  38   3          }
+  39   2          else
+  40   2          {
+  41   3            IN1 = 1;
+  42   3          }
+  43   2        }
+  44   1      }
+  45          
+  46          /*
+  47          参数定义：
+  48            ReverOrCoro 传递正反转，1为正转，0为反转
+  49            DutyCycle 占空比参数
+  50          */
+  51          void Motor_Right(bit ReverOrCoro, unsigned char DutyCycle) //
+  52          {
+  53   1        if(ReverOrCoro == 1)
+  54   1        {
+  55   2          IN3 = 1;
+C51 COMPILER V9.59.0.0   MOTOR                                                             10/12/2021 23:49:29 PAGE 2   
+
+  56   2          if(cnt <= DutyCycle)
+  57   2          {
+  58   3            IN4 = 0;
+  59   3          }
+  60   2          else
+  61   2          {
+  62   3            IN4 = 1;
+  63   3          }
+  64   2        }
+  65   1        else
+  66   1        {
+  67   2          IN4 = 1;
+  68   2          if(cnt <= DutyCycle)
+  69   2          {
+  70   3            IN3 = 0;
+  71   3          }
+  72   2          else
+  73   2          {
+  74   3            IN3 = 1;
+  75   3          }
+  76   2        }
+  77   1      }
+  78          
+  79          //定时器0 中断函数  中断号为 1
+  80          void InterruptTimer0() interrupt 1
+  81          {
+  82   1        //每次溢出过后，都需要重新设置初值
+  83   1        TH0 = 0xFF; //给定时器赋初值，定时130us
+  84   1        TL0 = 0x7E;
+  85   1        cnt++; //每次溢出cnt自加1，130us自加一次
+  86   1        if(cnt >= 100) //当cnt大于等于100时，就清0
+  87   1        {
+  88   2          cnt = 0;
+  89   2        }
+  90   1        //在这里是定义一个周期为 130 * 100 = 13000us，13ms
+  91   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     97    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      1       2
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       2
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
