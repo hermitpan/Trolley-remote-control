@@ -8,5 +8,7 @@
 
 手机控制端
 
+看看能不能弄撒啊阿大撒啊
+
 个人电脑控制端
 ![Image text](http://119.3.215.23/usr/image/GeekPilot.png)
